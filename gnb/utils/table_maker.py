@@ -1,7 +1,8 @@
 """
     This module does the heavy lifting of building the tables.
 
-    Merge SARS-CoV-2 *.xls, *.xlsx and *.json files for NCBI biosample upload
+    Merge SARS-CoV-2 *.xls, *.xlsx and *.json files for NCBI biosample upload.
+    Merge tables for SRA sample upload.
     Copyright (C) 2020 Dr Mark B Schultz dr.mark.schultz@gmail.com
     https://github.com/schultzm/gnb.git GNU Affero General Public License
     <https://www.gnu.org/licenses/>.
