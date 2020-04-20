@@ -56,7 +56,7 @@ def main():
     if not args.subparser_name:
         parser.print_help()
     elif args.subparser_name == "merge":
-        from .utils.table_maker import Table, merge_dfs
+        from .utils.table_maker import Table, merge_biosample_dfs
         infiles = {'GISAID_upload': Path(args.GISAID_upload),
                    'NCBI_upload'  : Path(args.NCBI_upload),
                    'GISAID_json'  : Path(args.GISAID_json)}
@@ -72,7 +72,7 @@ def main():
         GISAIDtemplate = Table(infiles['GISAID_upload']).gisaid_template(args.replacement)
         NCBItemplate   = Table(infiles['NCBI_upload']).ncbi_template()
         GISAIDjson     = Table(infiles['GISAID_json']).gisaid_json(args.replacement)
-        merged = merge_dfs(NCBItemplate,
+        merged = merge_biosample_dfs(NCBItemplate,
                            GISAIDtemplate,
                            GISAIDjson,
                            args.BioProject,

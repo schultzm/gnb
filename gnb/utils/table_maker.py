@@ -37,7 +37,7 @@ class Table():
         return dfs
 
 
-def merge_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
+def merge_biosample_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
               organism="Severe acute respiratory syndrome coronavirus 2",
               host="Homo sapiens",
               host_disease="COVID-19"):
