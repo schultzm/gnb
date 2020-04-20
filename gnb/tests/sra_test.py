@@ -63,6 +63,6 @@ class SRATestCasePass(unittest.TestCase):
         df = sra_to_upload.sra_builder(gisaid_upload,
                                 bsmpl_attributes,
                                 sra_table)
-        return df
+        self.assertEqual(df.iloc[1,0], "XC80_illumina")
 
 

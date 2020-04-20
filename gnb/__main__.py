@@ -97,6 +97,7 @@ def main():
         infiles = {'GISAID_upload'    : Path(args.GISAID_upload),
                    'NCBI_attributes'  : Path(args.BioSample_attributes),
                    'SRA_template'     : Path(args.SRA_template)}
+        # print(infiles)
         exit_cue = False
         for key in infiles:
             if not infiles[key].is_file():
@@ -110,9 +111,13 @@ def main():
         bsmpl_attributes = SRA_table().bsmpl_attributes(infiles['NCBI_attributes'])
         sra_table = SRA_table().sra_template(infiles['SRA_template'])
         sra_to_upload = SRA_table()
+        # print(gisaid_upload)
+        # print(bsmpl_attributes)
+        # print(sra_table)
         df = sra_to_upload.sra_builder(gisaid_upload,
                                        bsmpl_attributes,
                                        sra_table)
+        print(df.to_csv(sep="\t", index_label='biosample_accession'))
 
 
     elif args.subparser_name == "version":

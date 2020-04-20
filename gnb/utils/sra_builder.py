@@ -59,7 +59,7 @@ class SRA_table:
         # print(sra_table2[['Sequencing technology']])
         # print(sra_table2.dtypes)
         sra_table2["instrument_model"] = sra_table2[['Sequencing technology']].apply(lambda x: f"{MACHINES[x.values[0]]}", axis=1)
-        sra_table2['design_description'] = sra_table2[["Assembly method"]].apply(lambda x: f"{x.values[0]}.q {METHODS}", axis=1)
+        sra_table2['design_description'] = sra_table2[["Assembly method"]].apply(lambda x: f"{x.values[0]}. {METHODS}", axis=1)
         sra_table2["filetype"] = "fastq"
         sra_table2["filename"] = sra_table2[["isolate"]].apply(lambda x: f"{x.values[0]}_R1.fq.gz", axis=1)
         sra_table2["filename2"] =  sra_table2[["isolate"]].apply(lambda x: f"{x.values[0]}_R2.fq.gz", axis=1)
