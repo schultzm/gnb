@@ -31,26 +31,26 @@ class SRATestCasePass(unittest.TestCase):
         """Check the readability and format of SRA template .xlsx
         """
         sra_table = SRA_table()#, self.NCBIbsmpl, self.GISAIDup)
-        sra_table.sra_template(self.SRAup)
+        df = sra_table.sra_template(self.SRAup)
         # print(dir(sra_table.sra_table_in))
-        self.assertEqual(sra_table.sra_table_in.columns[0],
+        self.assertEqual(df.columns[0],
                          'biosample_accession')
 
     def biosample_attributes(self):
         """Check the readability and format of attributes.tsv (NCBI BioSamples)
         """
         bsmpl_attributes = SRA_table()
-        bsmpl_attributes.bsmpl_attributes(self.NCBIbsmpl)
-        print("\n", bsmpl_attributes.bs_attr.to_csv(sep="\t"))
-        self.assertEqual(bsmpl_attributes.bs_attr.iloc[0,0], "SAMNdummy2")
+        df = bsmpl_attributes.bsmpl_attributes(self.NCBIbsmpl)
+        # print("\n", bsmpl_attributes.bs_attr.to_csv(sep="\t"))
+        self.assertEqual(df.iloc[0,0], "SAMNdummy2")
 
     def gisaid_template(self):
         """Check readability and format of GISAID metadata upload.
         """
         gisaid_upload = SRA_table()
-        gisaid_upload.read_gisaid_metadata(self.GISAIDup)
-        print("\n", gisaid_upload.gisaid_metadata.to_csv(sep="\t"))
-        self.assertEqual(gisaid_upload.gisaid_metadata.iloc[2,2],
+        df = gisaid_upload.read_gisaid_metadata(self.GISAIDup)
+        # print("\n", gisaid_upload.gisaid_metadata.to_csv(sep="\t"))
+        self.assertEqual(df.iloc[2,2],
                          "betacoronavirus")
 
     def sra_build(self):
@@ -59,6 +59,10 @@ class SRATestCasePass(unittest.TestCase):
         gisaid_upload = SRA_table().read_gisaid_metadata(self.GISAIDup)
         bsmpl_attributes = SRA_table().bsmpl_attributes(self.NCBIbsmpl)
         sra_table = SRA_table().sra_template(self.SRAup)
-
+        sra_to_upload = SRA_table()
+        df = sra_to_upload.sra_builder(gisaid_upload,
+                                bsmpl_attributes,
+                                sra_table)
+        print(df.to_csv(sep="\t"))
 
 

@@ -27,4 +27,5 @@ def suite():
     suite.addTest(SRATestCasePass("SRA_template"))
     suite.addTest(SRATestCasePass("biosample_attributes"))
     suite.addTest(SRATestCasePass("gisaid_template"))
+    suite.addTest(SRATestCasePass("sra_build"))
     return suite
