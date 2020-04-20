@@ -27,10 +27,8 @@ class SRATestCasePass(unittest.TestCase):
         self.SRAup     = pkg_resources.resource_filename(__parent_dir__,
                                                          __test_SRA_up__)
 
-    def read_SRA_template(self):
-        pass
-        
-
     def merger_SRA_upload(self):
-        self.assertEqual(self.SRAup, self.NCBIbsmpl)
+        sra_table = SRA_table(self.SRAup)#, self.NCBIbsmpl, self.GISAIDup)
+        sra_table.sra_template()
+        self.assertEqual(sra_table, 'x')
 

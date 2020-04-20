@@ -7,6 +7,7 @@
     https://github.com/schultzm/gnb.git GNU Affero General Public License
     <https://www.gnu.org/licenses/>.
 """
+
 import pandas as pd
 
 class Table():
