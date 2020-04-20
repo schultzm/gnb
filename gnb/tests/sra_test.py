@@ -15,7 +15,7 @@ from .. import (__parent_dir__,
                 __test_NCBI_SMPL__,
                 __test_SRA_up__     )
 import pkg_resources
-from ..utils.table_maker import Table, merge_biosample_dfs
+from ..utils.sra_builder import SRA_table
 
 
 class SRATestCasePass(unittest.TestCase):
@@ -27,6 +27,10 @@ class SRATestCasePass(unittest.TestCase):
         self.SRAup     = pkg_resources.resource_filename(__parent_dir__,
                                                          __test_SRA_up__)
 
+    def read_SRA_template(self):
+        pass
+        
+
     def merger_SRA_upload(self):
-        self.assertEqual("x", "y")
+        self.assertEqual(self.SRAup, self.NCBIbsmpl)
 
