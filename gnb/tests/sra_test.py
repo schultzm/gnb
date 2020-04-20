@@ -27,11 +27,11 @@ class SRATestCasePass(unittest.TestCase):
         self.SRAup     = pkg_resources.resource_filename(__parent_dir__,
                                                          __test_SRA_up__)
 
-    def merger_SRA_upload(self):
+    def SRA_template(self):
         """Check the readability and format of SRA template .xlsx
         """
-        sra_table = SRA_table(self.SRAup)#, self.NCBIbsmpl, self.GISAIDup)
-        sra_table.sra_template()
+        sra_table = SRA_table()#, self.NCBIbsmpl, self.GISAIDup)
+        sra_table.sra_template(self.SRAup)
         # print(dir(sra_table.sra_table_in))
         self.assertEqual(sra_table.sra_table_in.columns[0],
                          'biosample_accession')
@@ -39,17 +39,26 @@ class SRATestCasePass(unittest.TestCase):
     def biosample_attributes(self):
         """Check the readability and format of attributes.tsv (NCBI BioSamples)
         """
-        bsmpl_attributes = SRA_table(self.NCBIbsmpl)
-        bsmpl_attributes.bsmpl_attributes()
+        bsmpl_attributes = SRA_table()
+        bsmpl_attributes.bsmpl_attributes(self.NCBIbsmpl)
+        print("\n", bsmpl_attributes.bs_attr.to_csv(sep="\t"))
         self.assertEqual(bsmpl_attributes.bs_attr.iloc[0,0], "SAMNdummy2")
 
     def gisaid_template(self):
         """Check readability and format of GISAID metadata upload.
         """
-        gisaid_upload = SRA_table(self.GISAIDup)
-        gisaid_upload.read_gisaid_metadata()
-        self.assertEqual(gisaid_upload.gisaid_metadata.iloc[0,2],
-                         "achcov19/Xla/XC81/2121")
+        gisaid_upload = SRA_table()
+        gisaid_upload.read_gisaid_metadata(self.GISAIDup)
+        print("\n", gisaid_upload.gisaid_metadata.to_csv(sep="\t"))
+        self.assertEqual(gisaid_upload.gisaid_metadata.iloc[2,2],
+                         "betacoronavirus")
+
+    def sra_build(self):
+        """Check joining off all tables and sra_table build
+        """
+        gisaid_upload = SRA_table().read_gisaid_metadata(self.GISAIDup)
+        bsmpl_attributes = SRA_table().bsmpl_attributes(self.NCBIbsmpl)
+        sra_table = SRA_table().sra_template(self.SRAup)
 
 
 
