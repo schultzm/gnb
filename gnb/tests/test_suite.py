@@ -11,6 +11,7 @@ Unit Test suite builder.
 
 import unittest
 from ..tests.gnb_test import MergeTestCasePass
+from ..tests.sra_test import SRATestCasePass
 
 
 def suite():
@@ -22,5 +23,6 @@ def suite():
     suite.addTest(MergeTestCasePass("read_gisaid_template"))
     suite.addTest(MergeTestCasePass("read_ncbi_template"))
     suite.addTest(MergeTestCasePass("read_GISAID_json"))
-    suite.addTest(MergeTestCasePass("merger"))
+    suite.addTest(MergeTestCasePass("merger_BioSample_upload"))
+    suite.addTest(SRATestCasePass("merger_SRA_upload"))
     return suite

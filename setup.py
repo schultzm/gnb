@@ -21,7 +21,13 @@ setup(
                    'Topic :: Scientific/Engineering :: Medical Science Apps.',
                    'Intended Audience :: Science/Research',
                    "Programming Language :: Python :: 3.7"],
-    keywords = ["database merge", "GISAID", "NCBI", "SARS-CoV-2", "COVID-19"],
+    keywords = ["database merge",
+                "GISAID",
+                "NCBI",
+                "SARS-CoV-2",
+                "COVID-19"
+                "SRA",
+                "BioSample"],
     download_url = gnb.__download_url__,
     author = gnb.__author__,
     author_email = gnb.__author_email__,
@@ -32,7 +38,7 @@ setup(
     install_requires = ["pandas>=0.25.3"],
     extras_require={"test": ["pytest", "pytest-cov"],
     },
-    package_data={"": ["*.xlsx", "*.xls", "*.json"]},
+    package_data={"": ["*.xlsx", "*.xls", "*.json", "*.tsv"]},
     entry_points={"console_scripts": ["gnb = gnb.__main__:main"]},
     project_urls={
         "Bug Reports": "https://github.com/schultzm/gnb/issues",

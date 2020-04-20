@@ -12,7 +12,7 @@ Unit Tests.
 import unittest
 from .. import (__parent_dir__,
                 __test_NCBI_up__,   
-                __test_GISAID_up__, 
+                __test_GISAID_up__,
                 __test_GISAID_dwn__)
 import pkg_resources
 from ..utils.table_maker import Table, merge_biosample_dfs
@@ -46,7 +46,7 @@ class MergeTestCasePass(unittest.TestCase):
         df = GISAIDjson.gisaid_json("missing")
         self.assertEqual(df.columns[0], "covv_gender")
 
-    def merger(self):
+    def merger_BioSample_upload(self):
         ncbiup     = Table(self.NCBIup).ncbi_template()
         gisaidup   = Table(self.GISAIDup).gisaid_template("missing")
         gisaidjson = Table(self.GISAIDdwn).gisaid_json("missing")
@@ -56,3 +56,6 @@ class MergeTestCasePass(unittest.TestCase):
                                "PRJNA613958",
                                "missing")
         self.assertEqual(merged.iloc[1].loc["host_age"], "65")
+
+    def merger_SRA_upload(self):
+        pass

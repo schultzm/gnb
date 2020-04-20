@@ -43,7 +43,7 @@ versioner (gnb.tests.gnb_test.MergeTestCasePass) ... ok
 read_gisaid_template (gnb.tests.gnb_test.MergeTestCasePass) ... ok
 read_ncbi_template (gnb.tests.gnb_test.MergeTestCasePass) ... ok
 read_GISAID_json (gnb.tests.gnb_test.MergeTestCasePass) ... ok
-merger (gnb.tests.gnb_test.MergeTestCasePass) ... ok
+merger_BioSample_upload (gnb.tests.gnb_test.MergeTestCasePass) ... ok
 
 ----------------------------------------------------------------------
 Ran 5 tests in 2.695s
