@@ -37,11 +37,19 @@ class SRATestCasePass(unittest.TestCase):
                          'biosample_accession')
 
     def biosample_attributes(self):
-        """Check the readability and format of attributes.tsv (BioSample nums)
+        """Check the readability and format of attributes.tsv (NCBI BioSamples)
         """
         bsmpl_attributes = SRA_table(self.NCBIbsmpl)
         bsmpl_attributes.bsmpl_attributes()
         self.assertEqual(bsmpl_attributes.bs_attr.iloc[0,0], "SAMNdummy2")
+
+    def gisaid_template(self):
+        """Check readability and format of GISAID metadata upload.
+        """
+        gisaid_upload = SRA_table(self.GISAIDup)
+        gisaid_upload.read_gisaid_metadata()
+        self.assertEqual(gisaid_upload.gisaid_metadata.iloc[0,2],
+                         "achcov19/Xla/XC81/2121")
 
 
 

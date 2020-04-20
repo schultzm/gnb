@@ -27,6 +27,7 @@ class SRA_table:
         self.bs_attr = df
     
 
-    def create_sra_table(self):
-        pass
+    def read_gisaid_metadata(self):
+        df = pd.read_excel(self.intable, header=1, sheet_name=1)
+        self.gisaid_metadata = df
     
