@@ -92,6 +92,29 @@ def main():
                            args.replacement)
         print(merged.to_csv(sep="\t", index=False))
 
+    elif args.subparser_name == "merge_sra":
+        from .utils.sra_builder import SRA_table 
+        infiles = {'GISAID_upload'    : Path(args.GISAID_upload),
+                   'NCBI_attributes'  : Path(args.BioSample_attributes),
+                   'SRA_template'     : Path(args.SRA_template)}
+        exit_cue = False
+        for key in infiles:
+            if not infiles[key].is_file():
+                exit_cue = True
+                print(f"File not found: {infiles[key]}", file=sys.stderr)
+            else:
+                pass
+        if exit_cue:
+            sys.exit()
+        gisaid_upload = SRA_table().read_gisaid_metadata(infiles['GISAID_upload'])
+        bsmpl_attributes = SRA_table().bsmpl_attributes(infiles['NCBI_attributes'])
+        sra_table = SRA_table().sra_template(infiles['SRA_template'])
+        sra_to_upload = SRA_table()
+        df = sra_to_upload.sra_builder(gisaid_upload,
+                                       bsmpl_attributes,
+                                       sra_table)
+
+
     elif args.subparser_name == "version":
         from . import __version__
         print(__version__)

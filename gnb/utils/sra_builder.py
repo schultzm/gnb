@@ -65,5 +65,5 @@ class SRA_table:
         sra_table2["filename2"] =  sra_table2[["isolate"]].apply(lambda x: f"{x.values[0]}_R2.fq.gz", axis=1)
         # print(sra_table2["instrument_model"])
         # sra_table['library_ID'] = df[]
-        return sra_table2
+        return sra_table2[sra_table.columns]
     
