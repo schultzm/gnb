@@ -5,6 +5,8 @@ accession numbers) and an NCBI biosample template upload (*.xlsx).  Reformats
 missing data, fixes column headers, fixes cell values, avoids the mess of
 manual handling of sheets within excel using vlookup, manual editing,
 concatenations, dates, etc.
+Also, use this for creating the SRA table upload. This will output a TSV
+(tab-delimited file) for upload to SRA.
 
     Merge SARS-CoV-2 *.xls, *.xlsx and *.json files for NCBI biosample upload.
     Merge tables for SRA sample upload.
@@ -22,7 +24,8 @@ def main():
 
     parser = argparse.ArgumentParser(
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description="""Generate SARS-CoV-2 NCBI Biosample upload table.
+            description="""Generate SARS-CoV-2 NCBI Biosample 
+                        or SRA upload tables.
                         """)
     subparser1_args = argparse.ArgumentParser(add_help=False)
     subparser1_args.add_argument("NCBI_upload", help="NCBI template")
@@ -35,13 +38,23 @@ def main():
                                  choices=["not collected", "not applicable",
                                           "missing"],
                                  type=str, required=False)
+    subparser2_args = argparse.ArgumentParser(add_help=False)
+    subparser2_args.add_argument("BioSample_attributes", help="BioSample attributes.tsv")
+    subparser2_args.add_argument("GISAID_upload", help="GISAID template")
+    subparser2_args.add_argument("SRA_template", help="SRA_metadata_acc.xlsx") #Must save spreadsheet under second tab (SRA_data) as a TSV (tab-delimited file) to upload the TSV file for the SRA metadata tab.
     subparser_modules = parser.add_subparsers(
         title="Sub-commands help", help="", metavar="", dest="subparser_name")
     subparser_modules.add_parser(
-        "merge", help="Merge metadata for SARS-CoV-2 NCBI submission.",
-        description="Merge metadata for SARS-CoV-2 NCBI submission.",
+        "merge_bsmp", help="Merge metadata for SARS-CoV-2 NCBI BioSample submission.",
+        description="Merge metadata for SARS-CoV-2 NCBI BioSample submission.",
         parents=[subparser1_args],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    subparser_modules.add_parser(
+        "merge_sra", help="Merge metadata for SARS-CoV-2 NCBI SRA submission.",
+        description="Merge metadata for SARS-CoV-2 NCBI SRA submission.",
+        parents=[subparser2_args],
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    
     subparser_modules.add_parser(
         "version", help="""Get the version number.""",
         description="Get the version number.",
@@ -55,7 +68,7 @@ def main():
 
     if not args.subparser_name:
         parser.print_help()
-    elif args.subparser_name == "merge":
+    elif args.subparser_name == "merge_bsmp":
         from .utils.table_maker import Table, merge_biosample_dfs
         infiles = {'GISAID_upload': Path(args.GISAID_upload),
                    'NCBI_upload'  : Path(args.NCBI_upload),
