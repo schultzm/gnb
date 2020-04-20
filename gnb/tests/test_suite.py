@@ -25,4 +25,5 @@ def suite():
     suite.addTest(MergeTestCasePass("read_GISAID_json"))
     suite.addTest(MergeTestCasePass("merger_BioSample_upload"))
     suite.addTest(SRATestCasePass("merger_SRA_upload"))
+    suite.addTest(SRATestCasePass("biosample_attributes"))
     return suite

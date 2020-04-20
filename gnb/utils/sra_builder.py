@@ -16,11 +16,15 @@ class SRA_table:
 
     def sra_template(self):
         df = pd.read_excel(self.intable, header=0, sheet_name=1)
-        print(df)
+        self.sra_table_in = df
  
         # self.sra_template = sra_template
         # self.attributes_bsmpls = biosample_attributes
         # self. gisaid_upload = gisaid_upload
+
+    def bsmpl_attributes(self):
+        df = pd.read_csv(self.intable, header=0, sep="\t")
+        self.bs_attr = df
     
 
     def create_sra_table(self):

@@ -28,7 +28,20 @@ class SRATestCasePass(unittest.TestCase):
                                                          __test_SRA_up__)
 
     def merger_SRA_upload(self):
+        """Check the readability and format of SRA template .xlsx
+        """
         sra_table = SRA_table(self.SRAup)#, self.NCBIbsmpl, self.GISAIDup)
         sra_table.sra_template()
-        self.assertEqual(sra_table, 'x')
+        # print(dir(sra_table.sra_table_in))
+        self.assertEqual(sra_table.sra_table_in.columns[0],
+                         'biosample_accession')
+
+    def biosample_attributes(self):
+        """Check the readability and format of attributes.tsv (BioSample nums)
+        """
+        bsmpl_attributes = SRA_table(self.NCBIbsmpl)
+        bsmpl_attributes.bsmpl_attributes()
+        self.assertEqual(bsmpl_attributes.bs_attr.iloc[0,0], "SAMNdummy2")
+
+
 
