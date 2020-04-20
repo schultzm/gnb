@@ -11,19 +11,22 @@ Unit Tests.
 
 import unittest
 from .. import (__parent_dir__,
-                __test_GISAID_up__, 
-                __test_NCBI_SMPL__,
+                __test_GISAID_up__,
                 __test_NCBI_SMPL__,
                 __test_SRA_up__     )
 import pkg_resources
 from ..utils.table_maker import Table, merge_biosample_dfs
 
 
-class MergeTestCasePass(unittest.TestCase):
+class SRATestCasePass(unittest.TestCase):
     def setUp(self):
-        self.NCBIup    = pkg_resources.resource_filename(__parent_dir__,
-                                                         __test_NCBI_up__)
         self.GISAIDup  = pkg_resources.resource_filename(__parent_dir__,
                                                          __test_GISAID_up__)
-        self.GISAIDdwn = pkg_resources.resource_filename(__parent_dir__,
-                                                         __test_GISAID_dwn__)
+        self.NCBIbsmpl = pkg_resources.resource_filename(__parent_dir__,
+                                                         __test_NCBI_SMPL__)
+        self.SRAup     = pkg_resources.resource_filename(__parent_dir__,
+                                                         __test_SRA_up__)
+
+    def merger_SRA_upload(self):
+        self.assertEqual("x", "y")
+

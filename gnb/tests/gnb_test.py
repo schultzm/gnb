@@ -56,6 +56,3 @@ class MergeTestCasePass(unittest.TestCase):
                                "PRJNA613958",
                                "missing")
         self.assertEqual(merged.iloc[1].loc["host_age"], "65")
-
-    def merger_SRA_upload(self):
-        pass
