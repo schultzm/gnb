@@ -42,6 +42,12 @@ def main():
     subparser2_args.add_argument("BioSample_attributes", help="BioSample attributes.tsv")
     subparser2_args.add_argument("GISAID_upload", help="GISAID template")
     subparser2_args.add_argument("SRA_template", help="SRA_metadata_acc.xlsx") #Must save spreadsheet under second tab (SRA_data) as a TSV (tab-delimited file) to upload the TSV file for the SRA metadata tab.
+    subparser3_args = argparse.ArgumentParser(add_help=False)
+    subparser3_args.add_argument("GISAID_json", help="json metadata")
+    subparser3_args.add_argument("-d", "--drop", help="""Columns to drop
+                                 from output table""",
+                                 nargs="+",
+                                 required=False)
     subparser_modules = parser.add_subparsers(
         title="Sub-commands help", help="", metavar="", dest="subparser_name")
     subparser_modules.add_parser(
@@ -54,7 +60,11 @@ def main():
         description="Merge metadata for SARS-CoV-2 NCBI SRA submission.",
         parents=[subparser2_args],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
+    subparser_modules.add_parser(
+        "view_gsd", help="View the GISAID_json as a tab-delimited table.",
+        description="Get tab-delimited format of GISAID_json",
+        parents=[subparser3_args],
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparser_modules.add_parser(
         "version", help="""Get the version number.""",
         description="Get the version number.",
@@ -111,15 +121,18 @@ def main():
         bsmpl_attributes = SRA_table().bsmpl_attributes(infiles['NCBI_attributes'])
         sra_table = SRA_table().sra_template(infiles['SRA_template'])
         sra_to_upload = SRA_table()
-        # print(gisaid_upload)
-        # print(bsmpl_attributes)
-        # print(sra_table)
         df = sra_to_upload.sra_builder(gisaid_upload,
                                        bsmpl_attributes,
                                        sra_table)
         print(df.to_csv(sep="\t", index_label='biosample_accession'))
 
-
+    elif args.subparser_name == "view_gsd":
+        from .utils.table_maker import Table
+        json_f = Table(args.GISAID_json)
+        print(args.drop)
+        sys.exit
+        df = json_f.gisaid_json("unknown", args.drop)
+        print(df.to_csv(sep="\t"))
     elif args.subparser_name == "version":
         from . import __version__
         print(__version__)

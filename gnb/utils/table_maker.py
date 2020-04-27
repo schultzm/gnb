@@ -25,12 +25,15 @@ class Table():
         df = pd.read_excel(self.indata, skiprows=12)
         return df
 
-    def gisaid_json(self, unknown):
+    def gisaid_json(self, unknown, todrop=None):
         import json
         dfs_json = [json.loads(jsonline) for jsonline in open(self.indata, 'r').readlines()]
         dfs = []
         for df_dict in dfs_json:
             out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])
+            if todrop:
+                todrop = [col for col in todrop if col in out.columns]
+                out.drop(todrop, axis=1, inplace=True)
             out.set_index("covv_virus_name", inplace=True)
             dfs.append(out)
         dfs = pd.concat(dfs)
