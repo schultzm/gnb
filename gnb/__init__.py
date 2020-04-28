@@ -10,11 +10,11 @@ gnb init.py
 
 """
 
-__version__         = "0.0.4"
+__version__         = "0.0.5"
 __parent_dir__      = "gnb"
 __test_NCBI_up__    = "data/dummy_BiosampleBuilder.xlsx"
 __test_GISAID_up__  = "data/dummy_BuilkUpload.xls"
-__test_GISAID_dwn__ = "data/dummy.json"
+__test_GISAID_dwn__ = "data/dummy.json.bz2"
 __test_NCBI_SMPL__  = "data/attributes.tsv"
 __test_SRA_up__     = "data/SRA_metadata_acc.xlsx"
 __description__     = "Build metadata tables for NCBI biosample/SRA submission"

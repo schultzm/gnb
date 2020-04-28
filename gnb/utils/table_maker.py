@@ -27,7 +27,8 @@ class Table():
 
     def gisaid_json(self, unknown, todrop=None):
         import json
-        dfs_json = [json.loads(jsonline) for jsonline in open(self.indata, 'r').readlines()]
+        import bz2
+        dfs_json = [json.loads(jsonline) for jsonline in bz2.open(self.indata, 'r').readlines()]
         dfs = []
         for df_dict in dfs_json:
             out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])
