@@ -127,7 +127,6 @@ def main():
         print(df.to_csv(sep="\t", index_label='biosample_accession'))
 
     elif args.subparser_name == "view_gsd":
-        import bz2
         from .utils.table_maker import Table
         json_f = Table(args.GISAID_json)
         df = json_f.gisaid_json("unknown", args.drop)

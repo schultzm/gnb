@@ -10,7 +10,8 @@
 
 MACHINES = {"Illumina NextSeq 550": "NextSeq 550",
             "Illumina iSeq": "Illumina iSeq 100",
-            "Illumina NextSeq 500": "NextSeq 500"}
+            "Illumina NextSeq 500": "NextSeq 500",
+            "nan": "missing"}
 METHODS = "Using minimap2, short reads mapped to SARS-CoV-2 NCBI accession MN908947.3. Using samtools, proper_pairs (samflag 2) mapping to MN908947.3 retained, unmapped reads (samflag 4) discarded (to filter out non-SARS-CoV-2 cDNA). Filtered reads submitted to NCBI"
 
 # print(MACHINES["Illumina NextSeq 550"])
@@ -30,18 +31,20 @@ class SRA_table:
 
     def bsmpl_attributes(self, intable):
         df = pd.read_csv(intable, header=0, sep="\t", index_col=2)
+        # print(df)
         return df
     
 
     def read_gisaid_metadata(self, intable):
         df = pd.read_excel(intable, header=1, sheet_name=1, index_col=2)
-        # df = df.drop(df.index[0])
+#         df = df.drop(df.index[0])
         return df
 
     def sra_builder(self, gisaid_up,
                     biosample_attributes,
                     sra_table):
         df = pd.concat([gisaid_up, biosample_attributes], axis=1)
+        # print(df.to_csv(sep="\t"))
         df.set_index("accession", inplace=True)
         # below will make the sra_table and df have the same index.values
         sra_table['biosample_accession'] = pd.Series(df.index.values).apply(lambda x: f"{x}")
@@ -58,7 +61,7 @@ class SRA_table:
         # print(sra_table2.columns)
         # print(sra_table2[['Sequencing technology']])
         # print(sra_table2.dtypes)
-        sra_table2["instrument_model"] = sra_table2[['Sequencing technology']].apply(lambda x: f"{MACHINES[x.values[0]]}", axis=1)
+        sra_table2["instrument_model"] = sra_table2[['Sequencing technology']].apply(lambda x: f"{MACHINES[str(x.values[0])]}", axis=1)
         sra_table2['design_description'] = sra_table2[["Assembly method"]].apply(lambda x: f"{x.values[0]}. {METHODS}", axis=1)
         sra_table2["filetype"] = "fastq"
         sra_table2["filename"] = sra_table2[["isolate"]].apply(lambda x: f"{x.values[0]}_R1.fq.gz", axis=1)
