@@ -1,3 +1,5 @@
+#!/usr/bin/env python3 
+
 """
     This module does the heavy lifting of building the tables.
 
@@ -9,6 +11,23 @@
 """
 
 import pandas as pd
+
+
+# import sys
+
+# def progressbar(it, prefix="", size=60, file=sys.stderr):
+#     count = len(it)
+#     def show(j):
+#         x = int(size*j/count)
+#         file.write("%s[%s%s] %i/%i\r" % (prefix, "#"*x, "."*(size-x), j, count))
+#         file.flush()        
+#     show(0)
+#     for i, item in enumerate(it):
+#         yield item
+#         show(i+1)
+#     file.write("\n")
+#     file.flush()
+
 
 class Table():
     def __init__(self, indata):
@@ -32,35 +51,62 @@ class Table():
         import shlex
         import re
         from subprocess import Popen, PIPE
-        rgx = re.compile('ab*', re.IGNORECASE)
+        if bzgrep_regex:
+            bzgrep_regex = re.compile(bzgrep_regex) 
         # bz2_cmd = f"bzgrep -iE '{bzgrep_regex}' {self.indata}"
         # print(bz2_cmd)
-        with bz2.BZ2File(self.indata, "r") as file:
-            for line in file:
-                dct = json.loads(line)
-                for drop in todrop:
-                    dct.pop(drop, None)
-                
-        import sys
-        sys.exit()
-        bz2_out = Popen(shlex.split(bz2_cmd), stdout = PIPE, stderr = PIPE)
-        results = bz2_out.communicate()[0].decode('UTF-8')
-        print(results)
-        import sys
-        sys.exit()
-        # dfs_json = [lne for line in results]
-        # print(dfs_json)
         dfs = []
-        for df_dict in dfs_json:
-            out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])
-            if todrop:
-                todrop = [col for col in todrop if col in out.columns]
-                out.drop(todrop, axis=1, inplace=True)
-            out.set_index("covv_virus_name", inplace=True)
-            dfs.append(out)
+        with bz2.BZ2File(self.indata, "r") as file:
+            # print(dir(file))
+            # import time
+            # nlines = int(Popen(shlex.split(f'wc -l {self.indata}'),
+            #                                  stdout=PIPE,
+            #                                  stderr=PIPE).communicate()[0]. \
+            #                                               decode('UTF-8').strip().split()[0])
+            # print(nlines)
+            # for i in progressbar(range(nlines),
+            #                      "Computing: ", 40):
+            #     time.sleep(0.1) # any calculation you need
+            for line in file:
+                df_dict = json.loads(line)
+                for drop in todrop:
+                    df_dict.pop(drop, None)
+                # for i in :
+                if bzgrep_regex and bzgrep_regex.match(''.join(list(map(str, df_dict.values())))):
+                    dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
+                else:
+                    dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
+                
+        #     if todrop:
+        #         todrop = [col for col in todrop if col in out.columns]
+        #         out.drop(todrop, axis=1, inplace=True)
+        #     out.set_index("covv_virus_name", inplace=True)
+        #     dfs.append(out)
+
+
+        # #         # print([match for match in rgx.search(list(dct.values()))])
+
+        # #         # print(list(dct.values()))
+        # # import sys
+        # # sys.exit()
+        # # bz2_out = Popen(shlex.split(bz2_cmd), stdout = PIPE, stderr = PIPE)
+        # # results = bz2_out.communicate()[0].decode('UTF-8')
+        # # print(results)
+        # # import sys
+        # # sys.exit()
+        # # # dfs_json = [lne for line in results]
+        # # # print(dfs_json)
+        # # for df_dict in dfs_json:
+        # #     out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])
+        # #     if todrop:
+        # #         todrop = [col for col in todrop if col in out.columns]
+        # #         out.drop(todrop, axis=1, inplace=True)
+        # #     out.set_index("covv_virus_name", inplace=True)
+        # #     dfs.append(out)
         dfs = pd.concat(dfs)
         dfs.replace("unknown", unknown, inplace=True)
         return dfs
+        print('already there', file=sys.stderr)
 
 
 def merge_biosample_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
