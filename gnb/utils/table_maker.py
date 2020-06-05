@@ -25,10 +25,31 @@ class Table():
         df = pd.read_excel(self.indata, skiprows=12)
         return df
 
-    def gisaid_json(self, unknown, todrop=None):
+    def gisaid_json(self, unknown, todrop=None, bzgrep_regex=None):
         import json
         import bz2
-        dfs_json = [json.loads(jsonline) for jsonline in bz2.open(self.indata, 'r').readlines()]
+        import os
+        import shlex
+        import re
+        from subprocess import Popen, PIPE
+        rgx = re.compile('ab*', re.IGNORECASE)
+        # bz2_cmd = f"bzgrep -iE '{bzgrep_regex}' {self.indata}"
+        # print(bz2_cmd)
+        with bz2.BZ2File(self.indata, "r") as file:
+            for line in file:
+                dct = json.loads(line)
+                for drop in todrop:
+                    dct.pop(drop, None)
+                
+        import sys
+        sys.exit()
+        bz2_out = Popen(shlex.split(bz2_cmd), stdout = PIPE, stderr = PIPE)
+        results = bz2_out.communicate()[0].decode('UTF-8')
+        print(results)
+        import sys
+        sys.exit()
+        # dfs_json = [lne for line in results]
+        # print(dfs_json)
         dfs = []
         for df_dict in dfs_json:
             out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])

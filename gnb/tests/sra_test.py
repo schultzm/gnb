@@ -54,7 +54,7 @@ class SRATestCasePass(unittest.TestCase):
                          "betacoronavirus")
 
     def sra_build(self):
-        """Check joining off all tables and sra_table build
+        """Check joining of all tables and sra_table build
         """
         gisaid_upload = SRA_table().read_gisaid_metadata(self.GISAIDup)
         bsmpl_attributes = SRA_table().bsmpl_attributes(self.NCBIbsmpl)

@@ -38,13 +38,19 @@ def main():
                                  choices=["not collected", "not applicable",
                                           "missing"],
                                  type=str, required=False)
+    subparser1_args.add_argument("-b", "--bzgrep_regex", help="""Regex to
+                                 pre-filter gisaid.json.bz2 file to decrease
+                                 processing time.""",
+                                 type=str, required=False,
+                                 default='Australia|Timor-Leste|Oceania')
     subparser2_args = argparse.ArgumentParser(add_help=False)
     subparser2_args.add_argument("BioSample_attributes", help="BioSample attributes.tsv")
     subparser2_args.add_argument("GISAID_upload", help="GISAID template")
     subparser2_args.add_argument("SRA_template", help="SRA_metadata_acc.xlsx") #Must save spreadsheet under second tab (SRA_data) as a TSV (tab-delimited file) to upload the TSV file for the SRA metadata tab.
     subparser3_args = argparse.ArgumentParser(add_help=False)
     subparser3_args.add_argument("GISAID_json", help="json metadata")
-    subparser3_args.add_argument("-d", "--drop", help="""Columns to drop
+    subparser4_args = argparse.ArgumentParser(add_help=False)
+    subparser4_args.add_argument("-d", "--drop", help="""Columns to drop
                                  from output table""",
                                  nargs="+",
                                  required=False)
@@ -53,7 +59,7 @@ def main():
     subparser_modules.add_parser(
         "merge_bsmp", help="Merge metadata for SARS-CoV-2 NCBI BioSample submission.",
         description="Merge metadata for SARS-CoV-2 NCBI BioSample submission.",
-        parents=[subparser1_args],
+        parents=[subparser1_args, subparser4_args],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparser_modules.add_parser(
         "merge_sra", help="Merge metadata for SARS-CoV-2 NCBI SRA submission.",
@@ -63,7 +69,7 @@ def main():
     subparser_modules.add_parser(
         "view_gsd", help="View the GISAID_json as a tab-delimited table.",
         description="Get tab-delimited format of GISAID_json",
-        parents=[subparser3_args],
+        parents=[subparser3_args, subparser4_args],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparser_modules.add_parser(
         "version", help="""Get the version number.""",
@@ -75,6 +81,7 @@ def main():
         description="Run gnb unittests.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     args = parser.parse_args()
+    # print(args)
 
     if not args.subparser_name:
         parser.print_help()
@@ -94,7 +101,10 @@ def main():
             sys.exit()
         GISAIDtemplate = Table(infiles['GISAID_upload']).gisaid_template(args.replacement)
         NCBItemplate   = Table(infiles['NCBI_upload']).ncbi_template()
-        GISAIDjson     = Table(infiles['GISAID_json']).gisaid_json(args.replacement)
+        GISAIDjson     = Table(infiles['GISAID_json']).gisaid_json(args.replacement,
+                                                                   args.drop,
+                                                                   args.bzgrep_regex)
+        print(GISAIDjson)
         merged = merge_biosample_dfs(NCBItemplate,
                            GISAIDtemplate,
                            GISAIDjson,
