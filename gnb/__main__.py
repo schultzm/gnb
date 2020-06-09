@@ -42,7 +42,7 @@ def main():
                                  pre-filter gisaid.json.bz2 file to decrease
                                  processing time.""",
                                  type=str, required=False,
-                                 default='Australia|Timor-Leste|Oceania')
+                                 default='Australia|Timor\-Leste|Oceania')
     subparser2_args = argparse.ArgumentParser(add_help=False)
     subparser2_args.add_argument("BioSample_attributes", help="BioSample attributes.tsv")
     subparser2_args.add_argument("GISAID_upload", help="GISAID template")
@@ -101,6 +101,13 @@ def main():
             sys.exit()
         GISAIDtemplate = Table(infiles['GISAID_upload']).gisaid_template(args.replacement)
         NCBItemplate   = Table(infiles['NCBI_upload']).ncbi_template()
+        # import bz2
+        # import zipfile
+        # print(help(bz2))
+        # infile = zipfile.ZipFile(infiles['GISAID_json'])#.ZipInfo.compress_type
+        # print(infile)
+        # if zipfile.ZIP_BZIP2(infiles['GISAID_json']):
+            # print('ZIPPED')
         GISAIDjson     = Table(infiles['GISAID_json']).gisaid_json(args.replacement,
                                                                    args.drop,
                                                                    args.bzgrep_regex)

@@ -13,22 +13,6 @@
 import pandas as pd
 
 
-# import sys
-
-# def progressbar(it, prefix="", size=60, file=sys.stderr):
-#     count = len(it)
-#     def show(j):
-#         x = int(size*j/count)
-#         file.write("%s[%s%s] %i/%i\r" % (prefix, "#"*x, "."*(size-x), j, count))
-#         file.flush()        
-#     show(0)
-#     for i, item in enumerate(it):
-#         yield item
-#         show(i+1)
-#     file.write("\n")
-#     file.flush()
-
-
 class Table():
     def __init__(self, indata):
         self.indata = indata
@@ -50,63 +34,25 @@ class Table():
         import os
         import shlex
         import re
+        import sys
         from subprocess import Popen, PIPE
         if bzgrep_regex:
-            bzgrep_regex = re.compile(bzgrep_regex) 
-        # bz2_cmd = f"bzgrep -iE '{bzgrep_regex}' {self.indata}"
-        # print(bz2_cmd)
+            bzgrep_regex = re.compile(rf"{bzgrep_regex}")
         dfs = []
         with bz2.BZ2File(self.indata, "r") as file:
-            # print(dir(file))
-            # import time
-            # nlines = int(Popen(shlex.split(f'wc -l {self.indata}'),
-            #                                  stdout=PIPE,
-            #                                  stderr=PIPE).communicate()[0]. \
-            #                                               decode('UTF-8').strip().split()[0])
-            # print(nlines)
-            # for i in progressbar(range(nlines),
-            #                      "Computing: ", 40):
-            #     time.sleep(0.1) # any calculation you need
-            for line in file:
+            for index, line in enumerate(file):
                 df_dict = json.loads(line)
                 for drop in todrop:
                     df_dict.pop(drop, None)
-                # for i in :
-                if bzgrep_regex and bzgrep_regex.match(''.join(list(map(str, df_dict.values())))):
+                if bzgrep_regex.search(' '.join(list(map(str, df_dict.values()))), re.IGNORECASE):
+                    dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
+                elif bzgrep_regex is None:
                     dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
                 else:
-                    dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
-                
-        #     if todrop:
-        #         todrop = [col for col in todrop if col in out.columns]
-        #         out.drop(todrop, axis=1, inplace=True)
-        #     out.set_index("covv_virus_name", inplace=True)
-        #     dfs.append(out)
-
-
-        # #         # print([match for match in rgx.search(list(dct.values()))])
-
-        # #         # print(list(dct.values()))
-        # # import sys
-        # # sys.exit()
-        # # bz2_out = Popen(shlex.split(bz2_cmd), stdout = PIPE, stderr = PIPE)
-        # # results = bz2_out.communicate()[0].decode('UTF-8')
-        # # print(results)
-        # # import sys
-        # # sys.exit()
-        # # # dfs_json = [lne for line in results]
-        # # # print(dfs_json)
-        # # for df_dict in dfs_json:
-        # #     out = pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]])
-        # #     if todrop:
-        # #         todrop = [col for col in todrop if col in out.columns]
-        # #         out.drop(todrop, axis=1, inplace=True)
-        # #     out.set_index("covv_virus_name", inplace=True)
-        # #     dfs.append(out)
+                    pass
         dfs = pd.concat(dfs)
         dfs.replace("unknown", unknown, inplace=True)
         return dfs
-        print('already there', file=sys.stderr)
 
 
 def merge_biosample_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
@@ -126,8 +72,7 @@ def merge_biosample_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
         pd.DataFrame -- stdout as TSV for NCBI biosample generation
     """
     # 1 get the epi numbers from gisaidjson into gisaidup
-    # df.set_index('key').join(other.set_index('key'))
-    ncbi = gisaidup.join(gisaidjson[["covv_accession_id"]])#.concat([gisaidup, ], axis=1)
+    ncbi = gisaidup.join(gisaidjson[["covv_accession_id"]])
     headers_NCBI_template = list(ncbiup.columns.values)
     for header in headers_NCBI_template:
         ncbi[header] = pd.Series()
