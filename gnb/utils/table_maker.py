@@ -38,13 +38,18 @@ class Table():
         from subprocess import Popen, PIPE
         if bzgrep_regex:
             bzgrep_regex = re.compile(rf"{bzgrep_regex}")
+        # else:
+        #     bzgrep_regex = re.compile(rf"")
         dfs = []
         with bz2.BZ2File(self.indata, "r") as file:
             for index, line in enumerate(file):
                 df_dict = json.loads(line)
-                for drop in todrop:
-                    df_dict.pop(drop, None)
-                if bzgrep_regex.search(' '.join(list(map(str, df_dict.values()))), re.IGNORECASE):
+                if todrop:
+                    for drop in todrop:
+                        df_dict.pop(drop, None)
+                else:
+                    pass
+                if bzgrep_regex and bzgrep_regex.search(' '.join(list(map(str, df_dict.values()))), re.IGNORECASE):
                     dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))
                 elif bzgrep_regex is None:
                     dfs.append(pd.DataFrame(df_dict, index=[df_dict["covv_virus_name"]]))

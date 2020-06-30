@@ -44,7 +44,7 @@ class MergeTestCasePass(unittest.TestCase):
     def read_GISAID_json(self):
         GISAIDjson = Table(self.GISAIDdwn)
         df = GISAIDjson.gisaid_json("missing", "sequence")
-        self.assertEqual(df.columns[0], "covv_gender")
+        self.assertEqual(df.iloc[0,0], "achcov19/Xla/XC81/2121")
 
     def merger_BioSample_upload(self):
         ncbiup     = Table(self.NCBIup).ncbi_template()
