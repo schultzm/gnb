@@ -111,7 +111,7 @@ def main():
         GISAIDjson     = Table(infiles['GISAID_json']).gisaid_json(args.replacement,
                                                                    args.drop,
                                                                    args.bzgrep_regex)
-        print(GISAIDjson)
+        # print(GISAIDjson)
         merged = merge_biosample_dfs(NCBItemplate,
                            GISAIDtemplate,
                            GISAIDjson,

@@ -81,7 +81,7 @@ def merge_biosample_dfs(ncbiup, gisaidup, gisaidjson, bioproject, unknown,
     headers_NCBI_template = list(ncbiup.columns.values)
     for header in headers_NCBI_template:
         ncbi[header] = pd.Series()
-    ncbi['sample_title'] = ncbi[["covv_accession_id"]].apply(lambda x: f"SARS-Cov-2 {x.name.split('/')[2]}" if x.isnull().any().any() else f"SARS-Cov-2 {x.name.split('/')[2]} (GISAID {x.values[0]})", axis=1)
+    ncbi['sample_title'] = ncbi[["covv_accession_id"]].apply(lambda x: f"SARS-CoV-2 {x.name.split('/')[2]}" if x.isnull().any().any() else f"SARS-Cov-2 {x.name.split('/')[2]} (GISAID {x.values[0]})", axis=1)
     # 2 get and keep the headers for column order at end of table build
     ncbi["bioproject_accession"] = bioproject
     ncbi["*organism"] = organism
