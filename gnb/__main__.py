@@ -30,7 +30,8 @@ def main():
     subparser1_args = argparse.ArgumentParser(add_help=False)
     subparser1_args.add_argument("NCBI_upload", help="NCBI template")
     subparser1_args.add_argument("GISAID_upload", help="GISAID template")
-    subparser1_args.add_argument("GISAID_json", help="json metadata")
+    subparser1_args.add_argument("GISAID_json", help="""json metadata.json.bz2
+                                 format""")
     subparser1_args.add_argument("BioProject", help="""NCBI bioproject
                                  accession.""")
     subparser1_args.add_argument("-r", "--replacement", help="""Missing value
@@ -48,11 +49,14 @@ def main():
     subparser2_args.add_argument("GISAID_upload", help="GISAID template")
     subparser2_args.add_argument("SRA_template", help="SRA_metadata_acc.xlsx") #Must save spreadsheet under second tab (SRA_data) as a TSV (tab-delimited file) to upload the TSV file for the SRA metadata tab.
     subparser3_args = argparse.ArgumentParser(add_help=False)
-    subparser3_args.add_argument("GISAID_json", help="json metadata")
+    subparser3_args.add_argument("GISAID_json", help="""json metadata.json.bz2
+                                 format""") #perhaps this should be removed and subparser1 used instead
     subparser4_args = argparse.ArgumentParser(add_help=False)
     subparser4_args.add_argument("-d", "--drop", help="""Columns to drop
-                                 from output table""",
-                                 nargs="+",
+                                 from output table.  For more than one column,
+                                 use the -d option again. For column names
+                                 containing spaces, escape the space with
+                                 a backslash.""",
                                  required=False)
     subparser_modules = parser.add_subparsers(
         title="Sub-commands help", help="", metavar="", dest="subparser_name")
@@ -82,6 +86,8 @@ def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     args = parser.parse_args()
     # print(args)
+    # print(type(args.drop))
+    # sys.exit()
 
     if not args.subparser_name:
         parser.print_help()
@@ -146,6 +152,7 @@ def main():
     elif args.subparser_name == "view_gsd":
         from .utils.table_maker import Table
         json_f = Table(args.GISAID_json)
+        # print(json_f)
         df = json_f.gisaid_json("unknown", args.drop)
         print(df.to_csv(sep="\t"))
     elif args.subparser_name == "version":
