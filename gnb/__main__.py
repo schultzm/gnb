@@ -29,7 +29,7 @@ def main():
                         """)
     subparser1_args = argparse.ArgumentParser(add_help=False)
     subparser1_args.add_argument("NCBI_upload", help="NCBI template")
-    subparser1_args.add_argument("GISAID_upload", help="GISAID template")
+    subparser1_args.add_argument("GISAID_upload", help="metadata file uploaded to GISAID (csv or excel)")
     subparser1_args.add_argument("GISAID_json", help="""json metadata.json.bz2
                                  format""")
     subparser1_args.add_argument("BioProject", help="""NCBI bioproject
@@ -46,7 +46,7 @@ def main():
                                  default='Australia|Timor\-Leste|Oceania')
     subparser2_args = argparse.ArgumentParser(add_help=False)
     subparser2_args.add_argument("BioSample_attributes", help="BioSample attributes.tsv")
-    subparser2_args.add_argument("GISAID_upload", help="GISAID template")
+    subparser2_args.add_argument("GISAID_upload", help="metadata file uploaded to GISAID (csv or excel)")
     subparser2_args.add_argument("SRA_template", help="SRA_metadata_acc.xlsx") #Must save spreadsheet under second tab (SRA_data) as a TSV (tab-delimited file) to upload the TSV file for the SRA metadata tab.
     subparser3_args = argparse.ArgumentParser(add_help=False)
     subparser3_args.add_argument("GISAID_json", help="""json metadata.json.bz2
