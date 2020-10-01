@@ -18,7 +18,11 @@ class Table():
         self.indata = indata
 
     def gisaid_template(self, unknown):
-        df = pd.read_excel(self.indata, header=0, sheet_name=1)
+        df = None
+        try:
+            df = pd.read_excel(self.indata, header=0, sheet_name=1)
+        except:
+            df = pd.read_csv(self.indata, header=0, sep=",")
         df.set_index("covv_virus_name", inplace=True)
         df = df.drop(df.index[0]) #drops the first row (=duplicated header)
         df.replace("unknown", unknown, inplace=True)
