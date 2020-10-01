@@ -123,7 +123,11 @@ def main():
                            GISAIDjson,
                            args.BioProject,
                            args.replacement)
-        print(merged.to_csv(sep="\t", index=False))
+        pos = 0
+        block_size = 1000
+        while pos < merged.shape[0]:
+            print(merged.iloc[pos:pos+block_size, :].to_csv(sep="\t", index=False)) #prints 1000 rows of data
+            pos+=block_size
 
     elif args.subparser_name == "merge_sra":
         from .utils.sra_builder import SRA_table 
@@ -147,7 +151,9 @@ def main():
         df = sra_to_upload.sra_builder(gisaid_upload,
                                        bsmpl_attributes,
                                        sra_table)
-        print(df.to_csv(sep="\t", index_label='biosample_accession'))
+        # for i in range(0, df.shape[0], 1000)
+
+        # print(df.to_csv(sep="\t", index_label='biosample_accession'))
 
     elif args.subparser_name == "view_gsd":
         from .utils.table_maker import Table
