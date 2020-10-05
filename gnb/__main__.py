@@ -151,6 +151,12 @@ def main():
         df = sra_to_upload.sra_builder(gisaid_upload,
                                        bsmpl_attributes,
                                        sra_table)
+        pos = 0
+        block_size = 1000
+        while pos < df.shape[0]:
+            print(df.iloc[pos:pos+block_size, :].to_csv(sep="\t", index_label='biosample_accession')) #prints 1000 rows of data
+            pos+=block_size
+
         # for i in range(0, df.shape[0], 1000)
 
         # print(df.to_csv(sep="\t", index_label='biosample_accession'))

@@ -10,7 +10,7 @@ gnb init.py
 
 """
 
-__version__         = "0.1.0"
+__version__         = "0.1.1"
 __parent_dir__      = "gnb"
 __test_NCBI_up__    = "data/dummy_BiosampleBuilder.xlsx"
 __test_GISAID_up__  = "data/dummy_BuilkUpload.xls"

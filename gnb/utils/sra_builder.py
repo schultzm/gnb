@@ -36,7 +36,14 @@ class SRA_table:
     
 
     def read_gisaid_metadata(self, intable):
-        df = pd.read_excel(intable, header=1, sheet_name=1, index_col=2)
+        df = None
+        try:
+            df = pd.read_excel(intable, header=1, sheet_name=1, index_col=2) # if .xls was used for GISAID upload
+        except:
+            df = pd.read_csv(intable, header=1, sep=",") # if csv format was used for GISAID upload
+            df.set_index('Virus name', inplace=True)
+        # print(df)
+        # df = pd.read_excel(intable, header=1, sheet_name=1, index_col=2)
 #         df = df.drop(df.index[0])
         return df
 
@@ -44,13 +51,13 @@ class SRA_table:
                     biosample_attributes,
                     sra_table):
         df = pd.concat([gisaid_up, biosample_attributes], axis=1)
-        # print(df.to_csv(sep="\t"))
         df.set_index("accession", inplace=True)
+        # print(df.to_csv(sep="\t"))
         # below will make the sra_table and df have the same index.values
         sra_table['biosample_accession'] = pd.Series(df.index.values).apply(lambda x: f"{x}")
-        # sra_table['library_ID']
         sra_table.set_index("biosample_accession", inplace=True)
         sra_table2 = pd.concat([sra_table, df], axis=1)
+        # print(sra_table2.index.values)
         sra_table2['library_ID'] = sra_table2[['isolate']].apply(lambda x: f"{x.values[0]}_illumina", axis=1)
         sra_table2['title'] = "Severe acute respiratory syndrome coronavirus 2"
         sra_table2['library_strategy'] = "AMPLICON"
